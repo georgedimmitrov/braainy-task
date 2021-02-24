@@ -1,0 +1,39 @@
+<div class="main-container doc-demo-main-container">
+  <header class="header-6">
+    <div class="branding">
+      <a href="javascript://">
+        <span class="title">Demo Project</span>
+      </a>
+    </div>
+  </header>
+  <nav class="subnav">
+    <ul class="nav">
+      <li class="nav-item">
+        <a class="nav-link" routerLinkActive="active" routerLink="/dashboard"
+          >Dashboard</a
+        >
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          routerLinkActive="active"
+          routerLink="/contact/contact-list"
+          >Contacts</a
+        >
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          routerLinkActive="active"
+          routerLink="/product/product-list"
+          >Products</a
+        >
+      </li>
+    </ul>
+  </nav>
+  <div class="content-container">
+    <div class="content-area">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>
