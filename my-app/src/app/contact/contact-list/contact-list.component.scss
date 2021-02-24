@@ -1,0 +1,65 @@
+:host {
+  .contact-list-datagrid {
+  }
+}
+
+:host {
+  .datagrid-wrapper {
+    height: 100%;
+  }
+
+  clr-datagrid {
+    height: 100% !important;
+
+    .datagrid-overlay-wrapper {
+      min-height: 100%;
+    }
+  }
+
+  ::ng-deep {
+    .action-bar-inline {
+      display: flex;
+      margin-top: 0;
+      justify-content: space-between;
+      align-items: center;
+
+      button {
+        font-size: 13px;
+      }
+
+      .search-wrapper {
+        min-width: 340px;
+
+        search-bar {
+          width: 100%;
+
+          .icons-search-wrapper {
+            display: flex;
+            align-items: center;
+
+            .searchbar-label {
+              width: 100% !important;
+              margin-right: 0;
+              order: 2;
+            }
+          }
+
+          .icons-search-wrapper > span {
+            order: 1;
+            white-space: nowrap;
+            margin-right: 0.5rem;
+          }
+        }
+      }
+    }
+
+    .pagination {
+      display: flex;
+      margin-top: 0;
+    }
+
+    datagrid-foot-select {
+      margin-top: 0;
+    }
+  }
+}

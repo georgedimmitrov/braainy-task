@@ -1,0 +1,20 @@
+<div class="icons-search-wrapper">
+  <label class="searchbar-label" for="search-icons-sticky">
+    <div class="search">
+      <clr-icon shape="search" size="24"></clr-icon>
+    </div>
+    <button class="close clear-search" type="button" (click)="clearSearch()">
+      <clr-icon shape="times-circle" size="16"></clr-icon>
+    </button>
+    <input
+      class="searchbar-input"
+      id="search-icons-sticky"
+      placeholder="{{ placeholder }}"
+      [disabled]="shouldDisableInput()"
+      type="text"
+      [(ngModel)]="searchPhrase"
+      (keyup.enter)="performSearch(searchPhrase)"
+    />
+  </label>
+  <span *ngIf="shouldDisplayMatches">{{ numberOfRecordsFound }} Matches</span>
+</div>

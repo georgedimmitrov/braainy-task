@@ -1,0 +1,54 @@
+:host {
+  font-family: Metropolis, 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  display: inline-block;
+
+  .searchbar-label {
+    position: relative;
+    width: 740px;
+    height: 35px;
+    margin-right: 10px;
+  }
+
+  .searchbar-label button:focus {
+    box-shadow: none;
+  }
+
+  .searchbar-label div.search {
+    position: absolute;
+    left: 5px;
+    top: 3px;
+  }
+
+  .searchbar-label div.search clr-icon[shape='search'] {
+    fill: #000000;
+    pointer-events: none;
+  }
+
+  .searchbar-label button.clear-search {
+    position: absolute;
+    right: 10px;
+    top: 6px;
+    opacity: unset;
+  }
+
+  .searchbar-label button.clear-search clr-icon[shape='times-circle'] {
+    fill: #747474;
+    pointer-events: none;
+  }
+
+  .searchbar-label input.searchbar-input,
+  .searchbar-label input.searchbar-input:focus {
+    width: 100%;
+    height: 100%;
+    padding-left: 35px;
+    border: 1px solid;
+    border-top-color: #d9d9d9;
+    border-left-color: #cdcdcd;
+    border-right-color: #cdcdcd;
+    border-bottom-color: #cdcdcd;
+    border-radius: 3px;
+    background: none;
+    font-size: 12px;
+    font-weight: 500;
+  }
+}

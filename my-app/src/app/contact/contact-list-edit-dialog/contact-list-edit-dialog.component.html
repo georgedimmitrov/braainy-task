@@ -1,0 +1,75 @@
+<clr-modal
+  id="editTasksModal"
+  [(clrModalOpen)]="isOpen"
+  [clrModalClosable]="false"
+>
+  <h3 *ngIf="isCreating" class="modal-title">Create Contact</h3>
+  <h3 *ngIf="!isCreating" class="modal-title">Edit Contact</h3>
+
+  <div class="modal-body">
+    <form
+      clrForm
+      class="clr-form"
+      [formGroup]="contactForm"
+      (ngSubmit)="save()"
+    >
+      <clr-input-container>
+        <label for="name"> Name </label>
+        <input
+          id="name"
+          clrInput
+          type="text"
+          name="name"
+          formControlName="name"
+        />
+        <clr-control-error *clrIfError="'required'">
+          Required
+        </clr-control-error>
+        <clr-control-error *clrIfError="'maxlength'">
+          Max Length
+        </clr-control-error>
+      </clr-input-container>
+
+      <clr-input-container>
+        <label for="countryId"> Country </label>
+        <input
+          id="countryId"
+          clrInput
+          type="text"
+          name="countryId"
+          formControlName="countryId"
+        />
+        <clr-control-error *clrIfError="'required'">
+          Required
+        </clr-control-error>
+      </clr-input-container>
+
+      <clr-input-container>
+        <label for="type"> Type </label>
+        <input
+          id="type"
+          clrInput
+          type="text"
+          name="type"
+          formControlName="type"
+        />
+        <clr-control-error *clrIfError="'required'">
+          Required
+        </clr-control-error>
+      </clr-input-container>
+
+      <div class="modal-footer">
+        <button class="btn btn-outline" type="button" (click)="close()">
+          Cancel
+        </button>
+
+        <button class="btn btn-primary" type="submit">
+          <ng-container *ngIf="isCreating; else saveMessage"
+            >Create
+          </ng-container>
+          <ng-template #saveMessage>Save</ng-template>
+        </button>
+      </div>
+    </form>
+  </div>
+</clr-modal>

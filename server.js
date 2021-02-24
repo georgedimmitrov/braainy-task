@@ -20,7 +20,7 @@ app.get('/api/contacts', async (req, res) => {
 });
 
 // add new contact
-app.post('/api/contacts/add-contact', async (req, res) => {
+app.post('/api/contacts/add-contact', async (req, res, next) => {
   const contactDetails = req.body;
   console.log('contact to create: ' + contactDetails);
   const client = new BillyClient('749f6c0f873eb98f16257eec9baa47c944617d34');
@@ -30,7 +30,7 @@ app.post('/api/contacts/add-contact', async (req, res) => {
     name: contactDetails.name,
     countryId: contactDetails.countryId,
   };
-  const newContactId = await createContact(client, newContact);
+  const newContactId = await createContact(client, newContact, next);
   res.json(newContactId);
 });
 
@@ -86,7 +86,7 @@ async function createContact(client, contact) {
 }
 
 async function updateContact(client, contactId, contact) {
-  const res = await client.request('PUT', '/contacts' + contactId, {
+  const res = await client.request('PUT', '/contacts/' + contactId, {
     contact: contact,
   });
 
@@ -161,3 +161,10 @@ async function getProducts(client) {
 
   return res;
 }
+
+// error handler ?
+app.use(function (err, req, res, next) {
+  console.error(err.message);
+  if (!err.statusCode) err.statusCode = 500;
+  res.status(err.statusCode).send(err.message);
+});

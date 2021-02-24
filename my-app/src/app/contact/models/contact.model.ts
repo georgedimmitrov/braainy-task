@@ -20,4 +20,14 @@ export class Contact {
   street: string;
   zipcodeId: string;
   zipcodeText: string;
+
+  constructor(contact?: Partial<Contact>) {
+    if (contact) {
+      this.id = contact.id;
+      this.name = contact.name;
+      this.countryId = contact.countryId;
+      this.type = contact.type;
+      this.createdTime = contact.createdTime;
+    }
+  }
 }

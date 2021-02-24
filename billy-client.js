@@ -19,6 +19,9 @@ class BillyClient {
       });
 
       if (res.status >= 400) {
+        console.log();
+        next(res);
+        return res;
         throw new Error(
           `${method}: ${url} failed with ${res.status} - ${res.data}`
         );
@@ -26,6 +29,7 @@ class BillyClient {
 
       return res.data;
     } catch (e) {
+      next(res);
       console.error(e);
       throw e;
     }
