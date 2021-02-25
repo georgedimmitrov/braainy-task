@@ -70,6 +70,14 @@ export class ProductListEditDialogComponent implements OnInit {
     this.product.isArchived = productFormFields.isArchived;
   }
 
+  get name() {
+    return this.productForm.get('name');
+  }
+
+  get description() {
+    return this.productForm.get('description');
+  }
+
   get isArchived() {
     return this.productForm.get('isArchived');
   }
