@@ -31,3 +31,5 @@ export class Contact {
     }
   }
 }
+
+export const availableCountryCodes: string[] = ['BG', 'CA', 'DK'];

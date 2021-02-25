@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 
-import { Contact } from '../models/contact.model';
+import { Contact, availableCountryCodes } from '../models/contact.model';
 
 type ContactFormFields = { name: string; countryId: string; type: string };
 
@@ -18,29 +18,17 @@ type ContactFormFields = { name: string; countryId: string; type: string };
   styleUrls: ['./contact-list-edit-dialog.component.scss'],
 })
 export class ContactListEditDialogComponent implements OnInit {
+  availableTypes: string[] = ['person', 'company'];
+  availableCountries: string[] = availableCountryCodes;
+
   isOpen: boolean = true;
 
   @Input() isCreating: boolean;
 
   @Input() contact: Contact;
 
-  // private _contact: Contact;
-
-  // @Input('contact') set contact(contact: Contact) {
-  //   this._contact = contact;
-  //   if (this.contactForm) {
-  //     this.contactForm.setValue(this.getContactFormControlsValues());
-  //   }
-  // }
-
-  // get contact(): Contact {
-  //   return this._contact;
-  // }
-
   @Output() onClose: EventEmitter<void> = new EventEmitter<void>();
   @Output() onSave: EventEmitter<Contact> = new EventEmitter<Contact>();
-
-  // @ViewChild('form') form: NgForm;
 
   contactForm: FormGroup;
 
@@ -54,12 +42,8 @@ export class ContactListEditDialogComponent implements OnInit {
       ]),
       countryId: this.formBuilder.control(this.contact.countryId, [
         Validators.required,
-        Validators.maxLength(30),
       ]),
-      type: this.formBuilder.control(this.contact.type, [
-        Validators.required,
-        Validators.maxLength(50),
-      ]),
+      type: this.formBuilder.control(this.contact.type, [Validators.required]),
     });
   }
 
@@ -75,7 +59,6 @@ export class ContactListEditDialogComponent implements OnInit {
   close(): void {
     this.onClose.emit();
     this.contactForm.reset();
-    // this.contactForm.setValue(this.getDefaultModuleFormControlsValues());
   }
 
   onOpenChange(): void {
@@ -92,11 +75,11 @@ export class ContactListEditDialogComponent implements OnInit {
     this.contact.type = contactFormFields.type;
   }
 
-  // private getContactFormControlsValues(): DefaultModuleFormFields {
-  //   return {
-  //     name: this.conta.getName(),
-  //     description: this.defaultModule.getDescription(),
-  //     active: this.defaultModule.getActive(),
-  //   };
-  // }
+  get countryId() {
+    return this.contactForm.get('countryId');
+  }
+
+  get type() {
+    return this.contactForm.get('type');
+  }
 }

@@ -10,6 +10,23 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static(process.cwd() + '/my-app/dist/angular-nodejs-example/'));
 
+app.get('/', (req, res) => {
+  res.sendFile(
+    process.cwd() + '/my-app/dist/angular-nodejs-example/index.html'
+  );
+});
+
+// error handler ?
+app.use(function (err, req, res, next) {
+  console.error(err.message);
+  if (!err.statusCode) err.statusCode = 500;
+  res.status(err.statusCode).send(err.message);
+});
+
+app.listen(port, () => {
+  console.log(`Server listening on the port::${port}`);
+});
+
 // Contacts routes
 
 // all contacts
@@ -29,6 +46,7 @@ app.post('/api/contacts/add-contact', async (req, res, next) => {
     organizationId: currentOrganizationId,
     name: contactDetails.name,
     countryId: contactDetails.countryId,
+    type: contactDetails.type,
   };
   const newContactId = await createContact(client, newContact, next);
   res.json(newContactId);
@@ -45,6 +63,7 @@ app.put('/api/contacts/update-contact/:id', async (req, res) => {
     organizationId: currentOrganizationId,
     name: contactDetails.name,
     countryId: contactDetails.countryId,
+    type: contactDetails.type,
   };
   const updatedContact = await updateContact(client, contactId, contact);
   res.json(updatedContact);
@@ -65,16 +84,6 @@ app.get('/api/products', async (req, res) => {
   const client = new BillyClient('749f6c0f873eb98f16257eec9baa47c944617d34');
   const products = await getProducts(client);
   res.json(products);
-});
-
-app.get('/', (req, res) => {
-  res.sendFile(
-    process.cwd() + '/my-app/dist/angular-nodejs-example/index.html'
-  );
-});
-
-app.listen(port, () => {
-  console.log(`Server listening on the port::${port}`);
 });
 
 // Creates a contact. The server replies with a list of contacts and we
@@ -161,10 +170,3 @@ async function getProducts(client) {
 
   return res;
 }
-
-// error handler ?
-app.use(function (err, req, res, next) {
-  console.error(err.message);
-  if (!err.statusCode) err.statusCode = 500;
-  res.status(err.statusCode).send(err.message);
-});

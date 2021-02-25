@@ -18,6 +18,7 @@ import {
   ContactGridColumnStateManagerService,
   ContactsGridColumnsState,
 } from '../services/contact-grid-column-state-manager.service';
+import { get as objectGet } from 'lodash';
 
 @Component({
   selector: 'app-contact-list',
@@ -41,10 +42,12 @@ export class ContactListComponent implements OnInit, OnDestroy {
 
   columnHiddenChange(columnName: any, isHidden: boolean) {
     if (!this.loading) {
-      console.log('param value1: ', columnName);
-      console.log('param value2: ', isHidden);
-      this.columnsState[columnName] = !this.columnsState[columnName];
-      this.columnsStateManagerService.persistColumnsState(this.columnsState);
+      // this solution works on older Clarity versions but was regressed and is now closed for some reason
+      // https://github.com/vmware/clarity/issues/4227
+      // this.columnsState[columnName] = !this.columnsState[columnName];
+      // this.columnsStateManagerService.persistColumnsState(this.columnsState);
+      // this.columnsState[columnName] = isHidden;
+      // this.state.a = !this.state.a;
     }
   }
 
@@ -60,7 +63,7 @@ export class ContactListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    // optimized way is to call on ngOnDestroy but does not work when doing a page refresh
+    // a more optimized way is to call 'persistColumnsState' in ngOnDestroy but does not work when doing a page refresh
     // this.columnsStateManagerService.persistColumnsState(this.columnsState);
 
     this.destroy$.next(true);
@@ -125,6 +128,10 @@ export class ContactListComponent implements OnInit, OnDestroy {
     this.totalRecords = this.filteredContacts.length;
   }
 
+  disableEditButton(): boolean {
+    return !this.selectedContact;
+  }
+
   private create(contact: Contact): void {
     this.loading = true;
     this.contactRepositoryService
@@ -175,5 +182,58 @@ export class ContactListComponent implements OnInit, OnDestroy {
 
     this.isEditDialogOpened = false;
     this.selectedContact = null;
+  }
+
+  // long workaround solution for saving columns state due to latest Clarity version bug
+  @HostListener('window:click', ['$event'])
+  onClick(event) {
+    this.saveColumnsEvent(event);
+  }
+
+  saveColumnsEvent = (event) => {
+    const attr = event.target.attributes;
+    const parent = objectGet(event.target, 'parentNode.parentNode.parentNode');
+    const parentTwo = objectGet(event.target, 'parentNode.parentNode');
+
+    if (!attr || !parent) {
+      return;
+    }
+
+    const parentClassName = parent.className.split(' ')[0];
+    const parentTwoClassName = parentTwo.className.split(' ')[1];
+    const attrName = attr[0].name;
+    const attrValue = attr[0].value;
+
+    if (
+      (attrName === 'shape' &&
+        attrValue === 'close' &&
+        parentClassName === 'column-switch') ||
+      (attrName === 'shape' &&
+        attrValue === 'view-columns' &&
+        parentClassName === 'datagrid-footer' &&
+        parentTwoClassName !== 'active')
+    ) {
+      const nameColumn = document.querySelector('.name-column');
+      const countryColumn = document.querySelector('.country-column');
+      const typeColumn = document.querySelector('.type-column');
+      const createdColumn = document.querySelector('.created-column');
+
+      this.setColumnState(nameColumn, 'nameColumn');
+      this.setColumnState(countryColumn, 'countryColumn');
+      this.setColumnState(typeColumn, 'typeColumn');
+      this.setColumnState(createdColumn, 'createdColumn');
+
+      this.columnsStateManagerService.persistColumnsState(this.columnsState);
+    }
+  };
+
+  private setColumnState(column: Element, columnName: string) {
+    if (column) {
+      if (column.classList.contains('datagrid-hidden-column')) {
+        this.columnsState[columnName] = false;
+      } else {
+        this.columnsState[columnName] = true;
+      }
+    }
   }
 }

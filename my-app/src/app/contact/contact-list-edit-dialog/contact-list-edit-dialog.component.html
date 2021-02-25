@@ -26,44 +26,59 @@
           Required
         </clr-control-error>
         <clr-control-error *clrIfError="'maxlength'">
-          Max Length
+          Maximum length allowed is 100 characters
         </clr-control-error>
       </clr-input-container>
 
-      <clr-input-container>
-        <label for="countryId"> Country </label>
-        <input
+      <clr-select-container>
+        <label for="countryId">Country Code</label>
+        <select
           id="countryId"
-          clrInput
-          type="text"
+          clrSelect
           name="countryId"
           formControlName="countryId"
-        />
+        >
+          <option [ngValue]="null" disabled>Please select one</option>
+          <option
+            *ngFor="let c of availableCountries"
+            [selected]="c === countryId.value"
+            [ngValue]="c"
+          >
+            {{ c }}
+          </option>
+        </select>
         <clr-control-error *clrIfError="'required'">
           Required
         </clr-control-error>
-      </clr-input-container>
+      </clr-select-container>
 
-      <clr-input-container>
-        <label for="type"> Type </label>
-        <input
-          id="type"
-          clrInput
-          type="text"
-          name="type"
-          formControlName="type"
-        />
+      <clr-select-container>
+        <label for="type">Type</label>
+        <select id="type" clrSelect name="type" formControlName="type">
+          <option [ngValue]="null" disabled>Please select one</option>
+          <option
+            *ngFor="let t of availableTypes"
+            [selected]="t === type.value"
+            [ngValue]="t"
+          >
+            {{ t }}
+          </option>
+        </select>
         <clr-control-error *clrIfError="'required'">
           Required
         </clr-control-error>
-      </clr-input-container>
+      </clr-select-container>
 
       <div class="modal-footer">
         <button class="btn btn-outline" type="button" (click)="close()">
           Cancel
         </button>
 
-        <button class="btn btn-primary" type="submit">
+        <button
+          class="btn btn-primary"
+          type="submit"
+          [disabled]="contactForm.invalid"
+        >
           <ng-container *ngIf="isCreating; else saveMessage"
             >Create
           </ng-container>

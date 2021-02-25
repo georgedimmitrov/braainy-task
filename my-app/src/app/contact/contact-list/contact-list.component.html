@@ -22,13 +22,10 @@
           type="button"
           class="btn btn-outline"
           (click)="onEdit()"
+          [disabled]="disableEditButton()"
         >
           <clr-icon shape="pencil" class="is-solid"></clr-icon>
           Edit Contact
-        </button>
-        <button id="delete" type="button" class="btn btn-outline">
-          <clr-icon shape="trash" class="is-solid"></clr-icon>
-          Delete Contact
         </button>
       </div>
       <div class="search-wrapper">
@@ -42,7 +39,7 @@
 
     <clr-dg-placeholder> No Items Found! </clr-dg-placeholder>
 
-    <clr-dg-column [clrDgSortBy]="'name'">
+    <clr-dg-column class="name-column" [clrDgSortBy]="'name'">
       <ng-template
         (clrDgHiddenChange)="
           columnHiddenChange('nameColumn', !columnsState?.nameColumn)
@@ -52,7 +49,7 @@
         Name
       </ng-template>
     </clr-dg-column>
-    <clr-dg-column #column>
+    <clr-dg-column class="country-column" #column>
       <ng-template
         (clrDgHiddenChange)="
           columnHiddenChange('countryColumn', !columnsState?.countryColumn)
@@ -62,7 +59,7 @@
         Country
       </ng-template>
     </clr-dg-column>
-    <clr-dg-column>
+    <clr-dg-column class="type-column">
       <ng-template
         (clrDgHiddenChange)="
           columnHiddenChange('typeColumn', !columnsState?.typeColumn)
@@ -72,7 +69,7 @@
         Type
       </ng-template>
     </clr-dg-column>
-    <clr-dg-column>
+    <clr-dg-column class="created-column">
       <ng-template
         (clrDgHiddenChange)="
           columnHiddenChange('createdColumn', !columnsState?.createdColumn)
