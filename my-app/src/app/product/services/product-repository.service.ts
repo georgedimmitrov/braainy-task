@@ -23,7 +23,13 @@ export class ProductRepositoryService {
 
   // Get all
   getProducts(): Observable<ProductsResponse> {
-    return this.httpClient.get<ProductsResponse>(`${this.PRODUCTS_API}`);
+    return this.httpClient.get<ProductsResponse>(`${this.PRODUCTS_API}`).pipe(
+      catchError((error: HttpErrorResponse) => {
+        return throwError(
+          `Error retrieving products data. ${error.statusText || 'Unknown'}`
+        );
+      })
+    );
   }
 
   // Add

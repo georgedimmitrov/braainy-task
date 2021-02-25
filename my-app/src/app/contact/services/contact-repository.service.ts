@@ -23,7 +23,13 @@ export class ContactRepositoryService {
 
   // Get all
   getContacts(): Observable<ContactsResponse> {
-    return this.httpClient.get<ContactsResponse>(`${this.CONTACTS_API}`);
+    return this.httpClient.get<ContactsResponse>(`${this.CONTACTS_API}`).pipe(
+      catchError((error: HttpErrorResponse) => {
+        return throwError(
+          `Error retrieving contacts data. ${error.statusText || 'Unknown'}`
+        );
+      })
+    );
   }
 
   // Add

@@ -9,6 +9,8 @@ import { Subject } from 'rxjs';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnDestroy {
+  headerTitle: string = 'Demo App';
+
   constructor() {}
 
   ngOnDestroy() {}
