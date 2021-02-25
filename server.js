@@ -80,10 +80,43 @@ app.get('/api/contacts/contact/:id', async (req, res) => {
 });
 
 // Products Routes
+
+// get all
 app.get('/api/products', async (req, res) => {
   const client = new BillyClient('749f6c0f873eb98f16257eec9baa47c944617d34');
   const products = await getProducts(client);
   res.json(products);
+});
+
+// add new product
+app.post('/api/products/add-product', async (req, res, next) => {
+  const productDetails = req.body;
+  const client = new BillyClient('749f6c0f873eb98f16257eec9baa47c944617d34');
+  const currentOrganizationId = await getOrganizationId(client);
+  const newProduct = {
+    organizationId: currentOrganizationId,
+    name: productDetails.name,
+    description: productDetails.description,
+    isArchived: productDetails.isArchived,
+  };
+  const dbProduct = await createProduct(client, newProduct, next);
+  res.json(dbProduct);
+});
+
+// update existing product
+app.put('/api/products/update-product/:id', async (req, res) => {
+  const productId = req.params.id;
+  const productDetails = req.body;
+  const client = new BillyClient('749f6c0f873eb98f16257eec9baa47c944617d34');
+  const currentOrganizationId = await getOrganizationId(client);
+  const product = {
+    organizationId: currentOrganizationId,
+    name: productDetails.name,
+    description: productDetails.description,
+    isArchived: productDetails.isArchived,
+  };
+  const updatedProduct = await updateProduct(client, productId, product);
+  res.json(updatedProduct);
 });
 
 // Creates a contact. The server replies with a list of contacts and we
@@ -102,42 +135,20 @@ async function updateContact(client, contactId, contact) {
   return res.contacts[0];
 }
 
-// Creates a product. The server replies with a list of products and we
-// return the id of the first product of the list
-async function createProduct(client, organizationId) {
-  const product = {
-    organizationId: organizationId,
-    name: 'Ninjas',
-    prices: [
-      {
-        unitPrice: 200,
-        currencyId: 'DKK',
-      },
-    ],
-  };
+// Creates a product. The server replies with a list of contacts and we
+// return the id of the first contact of the list
+async function createProduct(client, product) {
   const res = await client.request('POST', '/products', { product: product });
 
-  return res.products[0].id;
+  return res.products[0];
 }
 
-// Creates an invoice, the server replies with a list of invoices and we
-// return the id of the first invoice of the list
-async function createInvoice(client, organizationId, contactId, productId) {
-  const invoice = {
-    organizationId: organizationId,
-    invoiceNo: 5003,
-    entryDate: '2013-11-14',
-    contactId: contactId,
-    lines: [
-      {
-        productId: productId,
-        unitPrice: 200,
-      },
-    ],
-  };
-  const res = await client.request('POST', '/invoices', { invoice: invoice });
+async function updateProduct(client, productId, product) {
+  const res = await client.request('PUT', '/products/' + productId, {
+    product: product,
+  });
 
-  return res.invoices[0].id;
+  return res.products[0];
 }
 
 // Gets the id of organization associated with the API token.

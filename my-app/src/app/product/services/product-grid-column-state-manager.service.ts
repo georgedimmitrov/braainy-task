@@ -1,21 +1,21 @@
 import { Injectable } from '@angular/core';
 
-export interface ContactsGridColumnsState {
+export interface ProductsGridColumnsState {
   nameColumn: boolean;
-  countryColumn: boolean;
-  typeColumn: boolean;
-  createdColumn: boolean;
+  descriptionColumn: boolean;
+  productNoColumn: boolean;
+  isArchivedColumn: boolean;
 }
 
 @Injectable({
   providedIn: 'root',
 })
-export class ContactGridColumnStateManagerService {
-  private readonly localStorageKey = 'contacts-grid-column-state';
+export class ProductGridColumnStateManagerService {
+  private readonly localStorageKey = 'products-grid-column-state';
 
   constructor() {}
 
-  getColumnsState(): ContactsGridColumnsState {
+  getColumnsState(): ProductsGridColumnsState {
     const localStorageItem = localStorage.getItem(this.localStorageKey);
     if (localStorageItem) {
       return JSON.parse(localStorageItem);
@@ -26,16 +26,16 @@ export class ContactGridColumnStateManagerService {
     }
   }
 
-  persistColumnsState(columnsState: ContactsGridColumnsState) {
+  persistColumnsState(columnsState: ProductsGridColumnsState) {
     localStorage.setItem(this.localStorageKey, JSON.stringify(columnsState));
   }
 
-  private getInitialColumnsState(): ContactsGridColumnsState {
+  private getInitialColumnsState(): ProductsGridColumnsState {
     return {
       nameColumn: true,
-      countryColumn: true,
-      typeColumn: true,
-      createdColumn: true,
+      descriptionColumn: true,
+      productNoColumn: true,
+      isArchivedColumn: true,
     };
   }
 }

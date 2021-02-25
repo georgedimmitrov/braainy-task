@@ -1,1 +1,104 @@
-<p>product-list works!</p>
+<div class="datagrid-wrapper main-background">
+  <clr-datagrid
+    id="productListDatagrid"
+    class="product-list-datagrid"
+    [(clrDgSingleSelected)]="selectedProduct"
+    [clrDgLoading]="loading"
+  >
+    <clr-dg-action-bar class="action-bar-inline">
+      <div class="action-bar">
+        <button
+          id="addContact"
+          type="button"
+          class="btn btn-outline"
+          (click)="onAdd()"
+        >
+          <clr-icon shape="plus-circle" class="is-solid"></clr-icon>
+          Add Contact
+        </button>
+        <button
+          id="edit"
+          type="button"
+          class="btn btn-outline"
+          (click)="onEdit()"
+          [disabled]="disableEditButton()"
+        >
+          <clr-icon shape="pencil" class="is-solid"></clr-icon>
+          Edit Contact
+        </button>
+      </div>
+      <div class="search-wrapper">
+        <search-bar
+          [numberOfRecordsFound]="totalRecords"
+          (onSearchPhraseChange)="onSearchChange($event)"
+          [placeholder]="'Search'"
+        ></search-bar>
+      </div>
+    </clr-dg-action-bar>
+
+    <clr-dg-placeholder> No Products Found! </clr-dg-placeholder>
+
+    <clr-dg-column class="name-column" [clrDgSortBy]="'name'">
+      <ng-template
+        [clrDgHideableColumn]="{ hidden: !columnsState?.nameColumn }"
+      >
+        Name
+      </ng-template>
+    </clr-dg-column>
+    <clr-dg-column class="description-column" #column>
+      <ng-template
+        [clrDgHideableColumn]="{ hidden: !columnsState?.descriptionColumn }"
+      >
+        Description
+      </ng-template>
+    </clr-dg-column>
+    <clr-dg-column class="product-no-column">
+      <ng-template
+        [clrDgHideableColumn]="{ hidden: !columnsState?.productNoColumn }"
+      >
+        Product Number
+      </ng-template>
+    </clr-dg-column>
+    <clr-dg-column class="is-archived-column">
+      <ng-template
+        [clrDgHideableColumn]="{ hidden: !columnsState?.isArchivedColumn }"
+      >
+        Is Archived
+      </ng-template>
+    </clr-dg-column>
+
+    <clr-dg-row
+      *clrDgItems="let product of filteredProducts"
+      [clrDgItem]="product"
+    >
+      <clr-dg-cell>
+        {{ product.name }}
+      </clr-dg-cell>
+      <clr-dg-cell>{{ product.description }}</clr-dg-cell>
+      <clr-dg-cell> {{ product.productNo }}</clr-dg-cell>
+      <clr-dg-cell>
+        {{ product.isArchived }}
+      </clr-dg-cell>
+    </clr-dg-row>
+
+    <clr-dg-footer>
+      <clr-dg-pagination
+        #pagination
+        [clrDgPageSize]="20"
+        [clrDgTotalItems]="totalRecords"
+      >
+        {{ pagination.firstItem + 1 }} - {{ pagination.lastItem + 1 }} of
+        {{ pagination.totalItems }} Products
+      </clr-dg-pagination>
+    </clr-dg-footer>
+  </clr-datagrid>
+</div>
+
+<app-product-list-edit-dialog
+  *ngIf="isEditDialogOpened"
+  [isCreating]="isCreating"
+  [product]="selectedProduct"
+  (onClose)="onEditDialogClose()"
+  (onSave)="onEditDialogSave($event)"
+>
+</app-product-list-edit-dialog>

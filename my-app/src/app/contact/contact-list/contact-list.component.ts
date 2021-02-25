@@ -40,17 +40,6 @@ export class ContactListComponent implements OnInit, OnDestroy {
 
   destroy$: Subject<boolean> = new Subject<boolean>();
 
-  columnHiddenChange(columnName: any, isHidden: boolean) {
-    if (!this.loading) {
-      // this solution works on older Clarity versions but was regressed and is now closed for some reason
-      // https://github.com/vmware/clarity/issues/4227
-      // this.columnsState[columnName] = !this.columnsState[columnName];
-      // this.columnsStateManagerService.persistColumnsState(this.columnsState);
-      // this.columnsState[columnName] = isHidden;
-      // this.state.a = !this.state.a;
-    }
-  }
-
   constructor(
     private contactRepositoryService: ContactRepositoryService,
     private columnsStateManagerService: ContactGridColumnStateManagerService
@@ -183,6 +172,13 @@ export class ContactListComponent implements OnInit, OnDestroy {
     this.isEditDialogOpened = false;
     this.selectedContact = null;
   }
+
+  // this solution works on older Clarity versions but was regressed and is now closed for some reason
+  // https://github.com/vmware/clarity/issues/4227
+  // columnHiddenChange(columnName: any, isHidden: boolean) {
+  // this.columnsState[columnName] = !this.columnsState[columnName];
+  // this.columnsStateManagerService.persistColumnsState(this.columnsState);
+  // }
 
   // long workaround solution for saving columns state due to latest Clarity version bug
   @HostListener('window:click', ['$event'])

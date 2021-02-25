@@ -4,7 +4,6 @@
     class="contact-list-datagrid"
     [(clrDgSingleSelected)]="selectedContact"
     [clrDgLoading]="loading"
-    resize-on-next-loop
   >
     <clr-dg-action-bar class="action-bar-inline">
       <div class="action-bar">
@@ -41,9 +40,6 @@
 
     <clr-dg-column class="name-column" [clrDgSortBy]="'name'">
       <ng-template
-        (clrDgHiddenChange)="
-          columnHiddenChange('nameColumn', !columnsState?.nameColumn)
-        "
         [clrDgHideableColumn]="{ hidden: !columnsState?.nameColumn }"
       >
         Name
@@ -51,19 +47,13 @@
     </clr-dg-column>
     <clr-dg-column class="country-column" #column>
       <ng-template
-        (clrDgHiddenChange)="
-          columnHiddenChange('countryColumn', !columnsState?.countryColumn)
-        "
         [clrDgHideableColumn]="{ hidden: !columnsState?.countryColumn }"
       >
-        Country
+        Country Code
       </ng-template>
     </clr-dg-column>
     <clr-dg-column class="type-column">
       <ng-template
-        (clrDgHiddenChange)="
-          columnHiddenChange('typeColumn', !columnsState?.typeColumn)
-        "
         [clrDgHideableColumn]="{ hidden: !columnsState?.typeColumn }"
       >
         Type
@@ -71,9 +61,6 @@
     </clr-dg-column>
     <clr-dg-column class="created-column">
       <ng-template
-        (clrDgHiddenChange)="
-          columnHiddenChange('createdColumn', !columnsState?.createdColumn)
-        "
         [clrDgHideableColumn]="{ hidden: !columnsState?.createdColumn }"
       >
         Created Time

@@ -1,0 +1,112 @@
+<clr-modal
+  id="editProductModal"
+  [(clrModalOpen)]="isOpen"
+  [clrModalClosable]="false"
+>
+  <h3 *ngIf="isCreating" class="modal-title">Create Product</h3>
+  <h3 *ngIf="!isCreating" class="modal-title">Edit Product</h3>
+
+  <div class="modal-body">
+    <form
+      clrForm
+      class="clr-form"
+      [formGroup]="productForm"
+      (ngSubmit)="save()"
+    >
+      <clr-input-container>
+        <label for="name"> Name </label>
+        <input
+          id="name"
+          clrInput
+          type="text"
+          name="name"
+          formControlName="name"
+        />
+        <clr-control-error *clrIfError="'required'">
+          Required
+        </clr-control-error>
+        <clr-control-error *clrIfError="'maxlength'">
+          Maximum length allowed is 100 characters
+        </clr-control-error>
+      </clr-input-container>
+
+      <clr-textarea-container>
+        <label for="description">Description</label>
+        <textarea
+          clrTextarea
+          formControlName="description"
+          id="description"
+          name="description"
+          placeholder="Enter description"
+        >
+        </textarea>
+        <clr-control-error *clrIfError="'required'">
+          Required
+        </clr-control-error>
+        <clr-control-error *clrIfError="'maxlength'">
+          Maximum length allowed is 255 characters
+        </clr-control-error>
+        <!-- <clr-control-error *clrIfError="'isBlank'">
+          {{ 'common.validations.required' | translate }}
+        </clr-control-error>
+        <clr-control-error *clrIfError="'exceedsMaxLength'; error as err">
+          {{
+            'common.validations.maxLength'
+              | translate: { maxLength: err.requiredLength }
+          }}
+        </clr-control-error> -->
+      </clr-textarea-container>
+
+      <clr-toggle-container>
+        <label for="isArchived">Is Archived</label>
+        <clr-toggle-wrapper>
+          <input
+            id="isArchived"
+            type="checkbox"
+            clrToggle
+            name="isArchived"
+            formControlName="isArchived"
+          />
+        </clr-toggle-wrapper>
+      </clr-toggle-container>
+      <!-- <clr-select-container>
+        <label for="countryId">Is Archived</label>
+        <select
+          id="isArchived"
+          clrSelect
+          name="countryId"
+          formControlName="countryId"
+        >
+          <option [ngValue]="null" disabled>Please select one</option>
+          <option
+            *ngFor="let s of availableStatuses"
+            [selected]="s === isArchived.value"
+            [ngValue]="s"
+          >
+            {{ c }}
+          </option>
+        </select>
+        <clr-control-error *clrIfError="'required'">
+          Required
+        </clr-control-error>
+      </clr-select-container> -->
+
+      <div class="modal-footer">
+        <button class="btn btn-outline" type="button" (click)="close()">
+          Cancel
+        </button>
+
+        <button
+          class="btn btn-primary"
+          type="submit"
+          [disabled]="productForm.invalid"
+        >
+          <ng-container *ngIf="isCreating; else saveMessage"
+            >Create
+          </ng-container>
+          <ng-template #saveMessage>Save</ng-template>
+        </button>
+      </div>
+    </form>
+  </div>
+</clr-modal>

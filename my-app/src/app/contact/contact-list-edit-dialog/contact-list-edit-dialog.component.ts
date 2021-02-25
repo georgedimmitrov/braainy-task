@@ -18,18 +18,16 @@ type ContactFormFields = { name: string; countryId: string; type: string };
   styleUrls: ['./contact-list-edit-dialog.component.scss'],
 })
 export class ContactListEditDialogComponent implements OnInit {
-  availableTypes: string[] = ['person', 'company'];
-  availableCountries: string[] = availableCountryCodes;
-
-  isOpen: boolean = true;
-
   @Input() isCreating: boolean;
-
   @Input() contact: Contact;
 
   @Output() onClose: EventEmitter<void> = new EventEmitter<void>();
   @Output() onSave: EventEmitter<Contact> = new EventEmitter<Contact>();
 
+  availableTypes: string[] = ['person', 'company'];
+  availableCountries: string[] = availableCountryCodes;
+
+  isOpen: boolean = true;
   contactForm: FormGroup;
 
   constructor(private formBuilder: FormBuilder) {}
