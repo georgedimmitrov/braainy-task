@@ -19,6 +19,7 @@ import {
   ContactsGridColumnsState,
 } from '../services/contact-grid-column-state-manager.service';
 import { get as objectGet } from 'lodash';
+import { UtilsService } from 'src/app/common/services/utils.service';
 
 @Component({
   selector: 'app-contact-list',
@@ -42,7 +43,8 @@ export class ContactListComponent implements OnInit, OnDestroy {
 
   constructor(
     private contactRepositoryService: ContactRepositoryService,
-    private columnsStateManagerService: ContactGridColumnStateManagerService
+    private columnsStateManagerService: ContactGridColumnStateManagerService,
+    private utilsService: UtilsService
   ) {}
 
   ngOnInit(): void {
@@ -52,9 +54,6 @@ export class ContactListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    // a more optimized way is to call 'persistColumnsState' in ngOnDestroy but does not work when doing a page refresh
-    // this.columnsStateManagerService.persistColumnsState(this.columnsState);
-
     this.destroy$.next(true);
     this.destroy$.unsubscribe();
   }
@@ -173,42 +172,14 @@ export class ContactListComponent implements OnInit, OnDestroy {
     this.selectedContact = null;
   }
 
-  // this solution works on older Clarity versions but was regressed and is now closed for some reason
-  // https://github.com/vmware/clarity/issues/4227
-  // columnHiddenChange(columnName: any, isHidden: boolean) {
-  // this.columnsState[columnName] = !this.columnsState[columnName];
-  // this.columnsStateManagerService.persistColumnsState(this.columnsState);
-  // }
-
-  // long workaround solution for saving columns state due to latest Clarity version bug
+  // long workaround solution for saving columns state due to latest Clarity version bug https://github.com/vmware/clarity/issues/4227
   @HostListener('window:click', ['$event'])
   onClick(event) {
     this.saveColumnsEvent(event);
   }
 
   saveColumnsEvent = (event) => {
-    const attr = event.target.attributes;
-    const parent = objectGet(event.target, 'parentNode.parentNode.parentNode');
-    const parentTwo = objectGet(event.target, 'parentNode.parentNode');
-
-    if (!attr || !parent) {
-      return;
-    }
-
-    const parentClassName = parent.className.split(' ')[0];
-    const parentTwoClassName = parentTwo.className.split(' ')[1];
-    const attrName = attr[0].name;
-    const attrValue = attr[0].value;
-
-    if (
-      (attrName === 'shape' &&
-        attrValue === 'close' &&
-        parentClassName === 'column-switch') ||
-      (attrName === 'shape' &&
-        attrValue === 'view-columns' &&
-        parentClassName === 'datagrid-footer' &&
-        parentTwoClassName !== 'active')
-    ) {
+    if (this.utilsService.isModidfyingColumnsState(event)) {
       const nameColumn = document.querySelector('.name-column');
       const countryColumn = document.querySelector('.country-column');
       const typeColumn = document.querySelector('.type-column');
@@ -225,7 +196,7 @@ export class ContactListComponent implements OnInit, OnDestroy {
 
   private setColumnState(column: Element, columnName: string) {
     if (column) {
-      if (column.classList.contains('datagrid-hidden-column')) {
+      if (this.utilsService.isColumnHidden(column)) {
         this.columnsState[columnName] = false;
       } else {
         this.columnsState[columnName] = true;

@@ -9,6 +9,7 @@ import {
 } from '../services/product-grid-column-state-manager.service';
 import { ProductRepositoryService } from '../services/product-repository.service';
 import { get as objectGet } from 'lodash';
+import { UtilsService } from 'src/app/common/services/utils.service';
 
 @Component({
   selector: 'app-product-list',
@@ -32,7 +33,8 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
   constructor(
     private productRepositoryService: ProductRepositoryService,
-    private columnsStateManagerService: ProductGridColumnStateManagerService
+    private columnsStateManagerService: ProductGridColumnStateManagerService,
+    private utilsService: UtilsService
   ) {}
 
   ngOnInit(): void {
@@ -151,35 +153,14 @@ export class ProductListComponent implements OnInit, OnDestroy {
       );
   }
 
-  // long workaround solution for saving columns state due to latest Clarity version bug
+  // long workaround solution for saving columns state due to latest Clarity version bug https://github.com/vmware/clarity/issues/4227
   @HostListener('window:click', ['$event'])
   onClick(event) {
     this.saveColumnsEvent(event);
   }
 
   private saveColumnsEvent = (event) => {
-    const attr = event.target.attributes;
-    const parent = objectGet(event.target, 'parentNode.parentNode.parentNode');
-    const parentTwo = objectGet(event.target, 'parentNode.parentNode');
-
-    if (!attr || !parent) {
-      return;
-    }
-
-    const parentClassName = parent?.className?.split(' ')[0];
-    const parentTwoClassName = parentTwo?.className?.split(' ')[1];
-    const attrName = attr[0].name;
-    const attrValue = attr[0].value;
-
-    if (
-      (attrName === 'shape' &&
-        attrValue === 'close' &&
-        parentClassName === 'column-switch') ||
-      (attrName === 'shape' &&
-        attrValue === 'view-columns' &&
-        parentClassName === 'datagrid-footer' &&
-        parentTwoClassName !== 'active')
-    ) {
+    if (this.utilsService.isModidfyingColumnsState(event)) {
       const nameColumn = document.querySelector('.name-column');
       const descriptionColumn = document.querySelector('.description-column');
       const productNoColumn = document.querySelector('.product-no-column');
@@ -196,7 +177,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
   private setColumnState(column: Element, columnName: string) {
     if (column) {
-      if (column.classList.contains('datagrid-hidden-column')) {
+      if (this.utilsService.isColumnHidden(column)) {
         this.columnsState[columnName] = false;
       } else {
         this.columnsState[columnName] = true;

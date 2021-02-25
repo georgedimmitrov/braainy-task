@@ -46,15 +46,6 @@
         <clr-control-error *clrIfError="'maxlength'">
           Maximum length allowed is 255 characters
         </clr-control-error>
-        <!-- <clr-control-error *clrIfError="'isBlank'">
-          {{ 'common.validations.required' | translate }}
-        </clr-control-error>
-        <clr-control-error *clrIfError="'exceedsMaxLength'; error as err">
-          {{
-            'common.validations.maxLength'
-              | translate: { maxLength: err.requiredLength }
-          }}
-        </clr-control-error> -->
       </clr-textarea-container>
 
       <clr-toggle-container>
@@ -69,27 +60,6 @@
           />
         </clr-toggle-wrapper>
       </clr-toggle-container>
-      <!-- <clr-select-container>
-        <label for="countryId">Is Archived</label>
-        <select
-          id="isArchived"
-          clrSelect
-          name="countryId"
-          formControlName="countryId"
-        >
-          <option [ngValue]="null" disabled>Please select one</option>
-          <option
-            *ngFor="let s of availableStatuses"
-            [selected]="s === isArchived.value"
-            [ngValue]="s"
-          >
-            {{ c }}
-          </option>
-        </select>
-        <clr-control-error *clrIfError="'required'">
-          Required
-        </clr-control-error>
-      </clr-select-container> -->
 
       <div class="modal-footer">
         <button class="btn btn-outline" type="button" (click)="close()">

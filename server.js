@@ -158,12 +158,6 @@ async function getOrganizationId(client) {
   return res.organization.id;
 }
 
-// async function getInvoice(client, invoiceId) {
-//   const res = await client.request('GET', '/invoices', invoiceId);
-
-//   return res.invoices[0];
-// }
-
 async function getContact(client, contactId) {
   const res = await client.request('GET', '/contacts', contactId);
 
